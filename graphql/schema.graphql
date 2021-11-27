@@ -1,0 +1,78 @@
+type Reward {
+    id: ID!
+    name: String!
+    description: String!
+    requiredPoints: Int!
+}
+
+type University {
+    id: ID!
+    name: String!
+}
+
+type Topic {
+    id: ID!
+    name: String!
+    dueDate: String!
+    completeness: Int!
+}
+
+type Progress {
+    name: String!
+    university: University!
+    topics: [Topic]
+    points: Int!
+}
+
+input TopicInput {
+    id: ID!
+    name: String!
+    completeness: Int!
+}
+
+input RewardInput {
+    id: ID!
+    name: String!
+    description: String!
+    requiredPoints: Int!
+}
+
+input UpdateRewardInput {
+    id: ID!
+    name: String
+    completed: Boolean
+}
+
+input UpdateProgressInput {
+    user: String!
+    topics: [TopicInput]
+    points: Int!
+}
+
+input CreateUniversity {
+    id: ID!
+    name: String!
+}
+
+type Query {
+    getRewardById(rewardId: String!): Reward
+    listRewards: [Reward]
+    listProgress(id: ID!): Progress
+}
+
+type Mutation {
+    createUniversity(university: CreateUniversity!): University
+    createReward(reward: RewardInput!): Reward
+    updateReward(reward: UpdateRewardInput!): Reward
+    updateProgress(progress: UpdateProgressInput!): Progress
+    deleteReward(rewardId: String!): String
+}
+
+type Subscription {
+    onCreateReward: Reward
+    @aws_subscribe(mutations: ["createReward"])
+    onDeleteReward: String
+    @aws_subscribe(mutations: ["deleteReward"])
+    onUpdateReward: Reward
+    @aws_subscribe(mutations: ["updateReward"])
+}
